@@ -1,0 +1,64 @@
+// ass1- COMP3010 - S2 2023
+// author: Bernard mans
+// Cluster Load Balancing
+// Skeleton program for input and output
+
+import java.io.*;
+import java.util.Scanner;
+
+public class ass1_comp3010 {
+
+    public static void main(String[] args) {
+
+        int proc, // number of processors
+                rows, // number of rows in the matrix of the loads
+                cols; // number of columns in the matrix of the loads
+
+        int r, c, p; // index for manipulating arrays
+
+        Scanner keyboard = new Scanner(System.in);
+
+        System.out.println("Enter the number of processors that need to share the load:  ");
+        proc = keyboard.nextInt();
+
+        if (proc < 2) {
+            System.out.println("Too few processors");
+            System.exit(0);
+        }
+
+        System.out.println("Enter the number of rows of the matrix of the loads: ");
+        rows = keyboard.nextInt();
+        System.out.println("Enter the number of columns of the matrix of the loads: ");
+        cols = keyboard.nextInt();
+
+        if ((rows <= proc) || (cols <= proc)) {
+            System.out.println("Matrix too small");
+            System.exit(0);
+        }
+
+        int[][] M = new int[rows][cols]; // create Matrix of loads
+
+        System.out.println("Enter the load matrix (row by row, left to right): ");
+
+        for (r = 0; r < rows; r++) {
+            for (c = 0; c < cols; c++) {
+                M[r][c] = keyboard.nextInt();
+            }
+        }
+
+        // initialising variables for results
+        int maxLoad = 0; // Maximum load of all regions
+        int[][] C = new int[4][proc]; // Result Corner matrix
+
+        // DO SOMETHING HERE TO SOLVE THE PROBLEM
+
+        // output
+        System.out.println();
+        System.out.println("The maximum load (first line) followed by ");
+        System.out.println("the " + proc + " regions selected are (top row, left column, bottom row, right column): ");
+        System.out.println(maxLoad);
+        for (p = 0; p < proc; p++) {
+            System.out.println(C[0][p] + " " + C[1][p] + " " + C[2][p] + " " + C[3][p]);
+        }
+    }
+}
