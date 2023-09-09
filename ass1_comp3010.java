@@ -69,17 +69,19 @@ public class ass1_comp3010 {
                 // maxLoad = Math.max(maxLoad, M[r][c]);
             }
         }
-        float avgLoad = sumLoad / (float) proc;
+        // float avgLoad = sumLoad / (float) proc;
         // System.out.println("sumLoad=" + sumLoad + "\n"
         // + "maxLoad=" + maxLoad + "\n"
         // + "avgLoad=" + avgLoad);
 
         int[][] d = new int[proc][4]; // helper result matrix
         // try partitioning different ways
-        // @complexity4 | prоc * (O(n/prоc) + [cоls * cоls] + O(n/prоc) + [O(cоls) + O(n)]) + proc + 4*prоc
-        Result rrows = tryRows(proc, rows, cols, new Matrix(M, false), avgLoad);
-        // @complexity2 | prоc * (O(n/prоc) + [rows * rows] + O(n/prоc) + [O(rows) + O(n)]) + proc + 4*prоc
-        Result rcols = tryRows(proc, cols, rows, new Matrix(M, true), avgLoad);
+        // @complexity4 | prоc * (O(n/prоc) + [cоls * cоls] + O(n/prоc) + [O(cоls) +
+        // O(n)]) + proc + 4*prоc
+        Result rrows = tryRows(proc, rows, cols, new Matrix(M, false), sumLoad);
+        // @complexity2 | prоc * (O(n/prоc) + [rows * rows] + O(n/prоc) + [O(rows) +
+        // O(n)]) + proc + 4*prоc
+        Result rcols = tryRows(proc, cols, rows, new Matrix(M, true), sumLoad);
         if (rrows.maxLoad <= rcols.maxLoad) {
             d = rrows.d;
             maxLoad = rrows.maxLoad;
@@ -103,8 +105,9 @@ public class ass1_comp3010 {
     }
 
     // @complexity4 | @complexity5 + @complexity16 + @complexity17
-    // @complexity4 | prоc * (O(n/prоc) + [cоls * cоls] + O(n/prоc) + [O(cоls) + O(n)]) + proc + 4*prоc
-    private static Result tryRows(int proc, int rows, int cols, Matrix M, float avgLoad) {
+    // @complexity4 | prоc * (O(n/prоc) + [cоls * cоls] + O(n/prоc) + [O(cоls) +
+    // O(n)]) + proc + 4*prоc
+    private static Result tryRows(int proc, int rows, int cols, Matrix M, int sumLoad) {
         int r, c, p; // helper variables
         int[][] d = new int[proc][4]; // helper result matrix
 
@@ -114,8 +117,10 @@ public class ass1_comp3010 {
         int maxSum = 0; // the largest rows-region sums between all processors
         r = 0;
         int row_start = 0;
+        int avgLoad = sumLoad / proc;
         // @complexity5 | prоc * (@complexity6 + @complexity8)
-        // @complexity5 | prоc * (O(n/prоc) + [cоls * cоls] + O(n/prоc) + [O(cоls) + O(n)])
+        // @complexity5 | prоc * (O(n/prоc) + [cоls * cоls] + O(n/prоc) + [O(cоls) +
+        // O(n)])
         for (p = 0; p < proc;) {
             procAssigned = false;
             // d[p] = new int[] { row_start, 0, 0, 0 };
@@ -182,7 +187,9 @@ public class ass1_comp3010 {
                         // the actual return/submission
                         d[p] = new int[] { row_start, 0, r, cols - 1 };
                         row_start = r + 1;
-                        avgLoad = ((proc - p) * avgLoad - sum2) / (proc - p - 1);
+                        // avgLoad = ((proc - p) * avgLoad - sum2) / (proc - p - 1);
+                        sumLoad = sumLoad - sum;
+                        avgLoad = sumLoad / (proc - p - 1);
                         p++;
                         // record maxSum (see def var for what it does)
                         maxSum = Math.max(maxSum, sum);
